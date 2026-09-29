@@ -12,8 +12,8 @@ struct ContentView: View {
                 Text("Split bills.")
                     .foregroundStyle(.secondary)
                 
-                Button("Create a bill:") {
-                    print("Create bill button pressed")
+                NavigationLink("Create a bill:") {
+                    CreateBillView()
                 }
             }
             .padding()
@@ -25,6 +25,6 @@ struct ContentView: View {
     ContentView()
 }
 
-#Playground {
-    _ = 1 + 2
-}
+//#Playground {
+//    _ = 1 + 2
+//}
