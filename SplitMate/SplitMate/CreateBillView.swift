@@ -12,6 +12,12 @@ struct Person {
     var percentage: Double
 }
 
+struct Item {
+    let name: String
+    let price: Double
+    var person: String
+}
+
 struct CreateBillView: View {
     @State private var billName = ""
     @State private var billAmount = ""
@@ -20,6 +26,9 @@ struct CreateBillView: View {
         Person(name: "Zoraver", percentage: 1)
     ]
     @State private var splitMethod = "Equally"
+    @State private var items: [Item] = []
+    @State private var newItemName = ""
+    @State private var newItemPrice = ""
     
     var amountPerPerson: Double {
         guard let amount = Double(billAmount), !people.isEmpty else {
@@ -73,6 +82,31 @@ struct CreateBillView: View {
                 }
             }
             
+            Section("Add Item") {
+                TextField("Item name", text: $newItemName)
+                
+                TextField("Price", text: $newItemPrice)
+                    .keyboardType(.decimalPad)
+                
+                Button("Add Item") {
+                    if let price = Double(newItemPrice),
+                       !newItemName.isEmpty {
+                        
+                        items.append(
+                            Item(
+                                name: newItemName,
+                                price: price,
+                                person: ""
+                            )
+                        )
+                        
+                        newItemName = ""
+                        newItemPrice = ""
+                    }
+                       
+                }
+            }
+            
             Section("Split Method") {
                 Picker("Split Method", selection: $splitMethod) {
                     Text("Equally").tag("Equally")
@@ -118,6 +152,23 @@ struct CreateBillView: View {
                                 String(
                                     format: "$%.2f",
                                     amountForPerson(person)
+                                )
+                            )
+                        }
+                    }
+                }
+                
+                if splitMethod == "Item" {
+                    ForEach(items, id: \.name) {
+                        item in HStack {
+                            Text(item.name)
+                            
+                            Spacer()
+                            
+                            Text(
+                                String(
+                                    format: "$%.2f",
+                                    item.price
                                 )
                             )
                         }
